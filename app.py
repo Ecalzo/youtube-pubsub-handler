@@ -16,8 +16,8 @@ def receive():
         print(title, link)
         return "200"
     elif request.method == "GET":
-        print(data)
-        return "Hello, world!"
+        challenge = request.args["hub.challenge"]
+        return challenge
 
 if __name__ == "__main__":
     app.run()
