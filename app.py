@@ -3,6 +3,10 @@ from xml_parser import parse_yt_xml
 
 app = Flask(__name__)
 
+@app.route("/")
+def index():
+    return "Hello, World!"
+
 @app.route("/receive", methods=["GET", "POST"])
 def receive():
     request.get_data()
@@ -16,4 +20,4 @@ def receive():
         return "Hello, world!"
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
