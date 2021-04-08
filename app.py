@@ -22,6 +22,11 @@ def receive():
         challenge = request.args["hub.challenge"]
         return challenge
 
+if __name__ != "__main__":
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+
 if __name__ == "__main__":
     # if runnning locally, use the .env file
     from dotenv import load_dotenv
