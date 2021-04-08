@@ -1,4 +1,5 @@
 import os
+import logging
 from flask import Flask, request
 from utils.xml_parser import parse_yt_xml
 from utils.reddit import reddit_make_post
