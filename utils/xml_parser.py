@@ -23,7 +23,6 @@ def is_new_upload(published_ts: str, updated_ts: str) -> bool:
     pblsh_dt = datetime.datetime.strptime(pblsh, "%Y-%m-%dT%H:%M:%S")
     updt_dt = datetime.datetime.strptime(updt, "%Y-%m-%dT%H:%M:%S")
     diff = (updt_dt - pblsh_dt)
-    import pdb; pdb.set_trace()
     if hasattr(diff, "seconds"):
         return diff.seconds < 120 # 2 min
     else:
