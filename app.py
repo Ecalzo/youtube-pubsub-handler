@@ -18,7 +18,7 @@ def receive():
         title, url, is_new = parse_yt_xml(data)
         if is_new:
             app.logger.info(f"found new video: {title}, {url}, starting reddit subroutine")
-            # reddit_make_post(subreddit=os.getenv("SUBREDDIT"), title=title, url=url, app=app)
+            reddit_make_post(subreddit=os.getenv("SUBREDDIT"), title=title, url=url, app=app)
         else:
             app.logger.info(f"found video: {title}, {url}, but it is not a new post")
         return "200"

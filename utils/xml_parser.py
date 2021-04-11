@@ -30,7 +30,7 @@ def is_new_upload(published_ts: str, updated_ts: str) -> bool:
 
 
 if __name__ == "__main__":
-    with open("log.xml", "r") as xml_file:
+    with open("test.xml", "r") as xml_file:
         text = xml_file.read()
         title, link, is_new = parse_yt_xml(text)
         
