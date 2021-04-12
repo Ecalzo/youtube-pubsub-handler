@@ -15,9 +15,12 @@ def receive():
     request.get_data()
     data = request.data.decode("utf-8")
     if request.method == "POST":
-        title, url = parse_yt_xml(data)
-        app.logger.info(f"found post: {title}, {url}, starting reddit subroutine")
-        reddit_make_post(subreddit=os.getenv("SUBREDDIT"), title=title, url=url, app=app)
+        title, url, is_new = parse_yt_xml(data)
+        if is_new:
+            app.logger.info(f"found new video: {title}, {url}, starting reddit subroutine")
+            reddit_make_post(subreddit=os.getenv("SUBREDDIT"), title=title, url=url, app=app)
+        else:
+            app.logger.info(f"found video: {title}, {url}, but it is not a new post")
         return "200"
     elif request.method == "GET":
         challenge = request.args["hub.challenge"]
