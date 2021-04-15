@@ -15,6 +15,7 @@ def receive():
     request.get_data()
     data = request.data.decode("utf-8")
     if request.method == "POST":
+        app.logger.info(data)
         title, url, is_new = parse_yt_xml(data)
         if is_new:
             app.logger.info(f"found new video: {title}, {url}, starting reddit subroutine")
