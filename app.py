@@ -1,13 +1,14 @@
 import os
 import logging
 from flask import Flask, request
+from flask_sqlalchemy import SQLAlchemy
 from utils.xml_parser import parse_yt_xml
 from utils.reddit import reddit_make_post
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///tmp/test.db")
-
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///test.db")
+db = SQLAlchemy(app)
 
 @app.route("/")
 def index():

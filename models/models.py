@@ -15,7 +15,7 @@ class Post(db.Model):
 
 
 class Lease(db.Model):
-    channel_id = db.Column(db.String(), unique=True, nullable=False primary_key=True)
+    channel_id = db.Column(db.String(), unique=True, nullable=False, primary_key=True)
     lease_start_ts = db.Column(db.DateTime(timezone=True))
     lease_expire_ts = db.Column(db.DateTime(timezone=True))
     created_at = db.Column(db.DateTime(timezone=True), default=datetime.utcnow())
@@ -24,8 +24,11 @@ class Lease(db.Model):
     def __repr__(self):
         return f"<Lease {self.channel_id}"
 
-if __name__ == "__main__":
+def create_db():
     print("creating database")
     db.create_all()
     print("database created")
 
+
+if __name__ == "__main__":
+    create_db()
