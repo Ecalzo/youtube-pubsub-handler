@@ -4,7 +4,7 @@ import datetime
 class PSH_XML():
     def __init__(self, data):
         self.data = data
-        parse_yt_xml(xml_body=data)
+        self.parse_yt_xml(xml_body=data)
 
     def parse_yt_xml(self, xml_body: str): 
         root = ET.fromstring(xml_body)
@@ -23,12 +23,14 @@ class PSH_XML():
         self.published = published_dt
         self.updated = updated_dt
 
-    def parse_xml_dates(published_ts, updated_ts):
-        # TODO: parse timezone info for database cols
-        # pop off any strange nanoseconds and timezone info
-        # published and updated look differently...
-        pblsh = published_ts.split("+")[0]
-        updt = updated_ts.split(".")[0]
-        pblsh_dt = datetime.datetime.strptime(pblsh, "%Y-%m-%dT%H:%M:%S")
-        updt_dt = datetime.datetime.strptime(updt, "%Y-%m-%dT%H:%M:%S")
+    def parse_xml_dates(published_ts: str, updated_ts: str):
+        pblsh_ts = datetime.datetime.strptime(published_ts, "%y-%m-%dt%h:%m:%s%z")
+        updt = self._rm_seconds_from_ts(updated_ts)
+        updt_dt = datetime.datetime.strptime(updt, "%y-%m-%dt%h:%m:%s%z")
         return pblsh_dt, updt_dt
+
+    def _rm_seconds_from_ts(self, ts):
+        splt = ts.split(".")
+        date_time = splt[0]
+        tz_info = splt[-1].split("+")[-1]
+        return "+".join(date_time, tz_info)
