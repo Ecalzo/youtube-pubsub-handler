@@ -3,6 +3,7 @@ import urllib.parse as urlparse
 from urllib.parse import parse_qs
 from flask import Blueprint, request, current_app
 from . import models
+from . import xml_utils
 from datetime import datetime, timedelta
 
 bp = Blueprint("pubsubhub", __name__, url_prefix="/pubsubhub")
@@ -17,8 +18,7 @@ def hook():
         channel_id = extract_channel_id(args["hub.topic"])
         lease_row = models.Lease.query.filter_by(channel_id=channel_id)
         if lease_row.first() and args["hub.mode"] == "subscribe":
-            # update the lease, or can we upsert???
-            print("UPDATING LEASE")
+            # update record w/ new lease
             lease_row.update(
                 dict(
                     lease_start_ts=datetime.utcnow(),
@@ -45,12 +45,13 @@ def hook():
         return args["hub.challenge"]
 
     if request.method == "POST":
-        xml = PSH_XML(data)
-        if models.Post.query.filter_by(video_id=xml.video_id):  # already posted
+        xml = xml_utils.PSH_XML(data)
+        if models.Post.query.filter_by(video_id=xml.video_id).first():  # already posted
            current_app.logger.info(f"video {xml.video_id} has already been posted")
+           return "already posted, but thanks"
         else:  # new post
             # get list of subreddits to post to
-            subs_results = models.Subscriptions.query.filter_by(channel_id=channel_id)
+            subs_results = models.Subscription.query.filter_by(channel_id=xml.channel_id)
             subreddits = get_subs_for_channel(query_results=subs_results)
             
             current_app.logger.info(f"creating new post for video: {xml.title}, channel: {xml.channel_id}")
@@ -66,6 +67,7 @@ def hook():
             db.session.commit()
             for subreddit in subreddits:
                 # make post here
+                print(f"posting to sub {subreddit}")
                 pass
             return "200" 
 
@@ -74,7 +76,7 @@ def get_subs_for_channel(query_results):
     # FIXME: the data type for query_results needs to be inspected
     # sqlalchemy docs do not have a straightforward answer for the datatype
     subreddits = set()
-    for result in results:
+    for result in query_results:
         subreddits.add(result.subreddit)
     return subreddits 
 
