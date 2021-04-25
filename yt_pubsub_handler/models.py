@@ -25,3 +25,13 @@ class Lease(db.Model):
 
     def __repr__(self):
         return f"<Lease {self.channel_id}"
+
+
+class Subscription(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    channel_id = db.Column(db.String(), nullable=False)
+    subreddit = db.Column(db.String(), nullable=False)
+
+    def __repr__(self):
+        return f"Subscription {self.id} {self.channel_id} {self.subreddit}"
+

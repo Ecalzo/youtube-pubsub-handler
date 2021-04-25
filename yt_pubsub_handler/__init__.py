@@ -36,5 +36,7 @@ def create_app(test_config=None):
     db_utils.init_app(app)
     from . import pubsubhub
     app.register_blueprint(pubsubhub.bp)
+    from . import subscriptions
+    app.register_blueprint(subscriptions.bp)
     return app
 
