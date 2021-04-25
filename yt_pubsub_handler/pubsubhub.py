@@ -1,4 +1,6 @@
 from yt_pubsub_handler import db
+import urllib.parse as urlparse
+from urllib.parse import parse_qs
 from flask import Blueprint, request, current_app
 from . import models
 from datetime import datetime, timedelta
@@ -13,12 +15,26 @@ def hook():
         args = request.args
         # get the data from the lease request
         channel_id = extract_channel_id(args["hub.topic"])
-        if models.Lease.query.filter_by(channel_id=channel_id):
+        lease_row = models.Lease.query.filter_by(channel_id=channel_id)
+        if lease_row.first() and args["hub.mode"] == "subscribe":
             # update the lease, or can we upsert???
-            # also handle unsubscribing here...
-            pass
+            print("UPDATING LEASE")
+            lease_row.update(
+                dict(
+                    lease_start_ts=datetime.utcnow(),
+                    lease_expire_ts=datetime.utcnow() + timedelta(seconds=int(args["hub.lease_seconds"])),
+                    updated_at=datetime.utcnow()
+                )
+            )
+            db.session.commit()
+        elif lease_row.first() and args["hub.mode"] == "unsubscribe":
+            # unsubscribe
+            current_app.logger.info(f"unsubscribing {channel_id}")
+            lease_row.delete()
+            db.session.commit()
         else:  # this is a new lease
             if args["hub.mode"] == "subscribe":
+                print("subscribe time")
                 new_lease = models.Lease(
                     channel_id=channel_id,
                     lease_start_ts=datetime.utcnow(),
@@ -30,20 +46,41 @@ def hook():
 
     if request.method == "POST":
         xml = PSH_XML(data)
-        if models.Post.query.filter_by(video_id=xml.video_id):
+        if models.Post.query.filter_by(video_id=xml.video_id):  # already posted
            current_app.logger.info(f"video {xml.video_id} has already been posted")
-        else:
-            current_app.logger.info(f"creating new post for video: {xml.title}, channel: {xml.channel_id}"
+        else:  # new post
+            # get list of subreddits to post to
+            subs_results = models.Subscriptions.query.filter_by(channel_id=channel_id)
+            subreddits = get_subs_for_channel(query_results=subs_results)
+            
+            current_app.logger.info(f"creating new post for video: {xml.title}, channel: {xml.channel_id}")
+
             new_post = models.Post(
                     video_id=xml.video_id,
-                    channe_id=xml.channel_id,
+                    channel_id=xml.channel_id,
                     title=xml.title,
                     published=xml.published,
                     updated=xml.updated
                     )
             db.session.add(new_post)
             db.session.commit()
-            # make post here
+            for subreddit in subreddits:
+                # make post here
+                pass
             return "200" 
 
+
+def get_subs_for_channel(query_results):
+    # FIXME: the data type for query_results needs to be inspected
+    # sqlalchemy docs do not have a straightforward answer for the datatype
+    subreddits = set()
+    for result in results:
+        subreddits.add(result.subreddit)
+    return subreddits 
+
+
+def extract_channel_id(url: str) -> str:
+    "looks like https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCma-7DYdsG6CrEj-h1OPOaA"
+    parsed = urlparse.urlparse(url)
+    return parse_qs(parsed.query)["channel_id"][0]
 
