@@ -4,6 +4,7 @@ from urllib.parse import parse_qs
 from flask import Blueprint, request, current_app
 from . import models
 from . import xml_utils
+from . import reddit_utils
 from datetime import datetime, timedelta
 
 bp = Blueprint("pubsubhub", __name__, url_prefix="/pubsubhub")
@@ -68,7 +69,7 @@ def hook():
             for subreddit in subreddits:
                 # make post here
                 print(f"posting to sub {subreddit}")
-                pass
+                reddit_make_post(subreddit, xml.title, xml.url)
             return "200" 
 
 
