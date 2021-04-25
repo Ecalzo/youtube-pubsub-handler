@@ -1,6 +1,7 @@
+import requests
 from urllib3.exceptions import HTTPError
 from yt_pubsub_handler import db
-from flask import Blueprint, request, current_app, flash
+from flask import Blueprint, request, current_app, flash, render_template
 from . import models
 
 bp = Blueprint("subscriptions", __name__, url_prefix="/subscriptions")
@@ -15,10 +16,10 @@ def new():
             error = "channel_id is required"
         elif not subreddit:
             error = "subreddit is required"
-        elif models.Subscriptions.query.filter_by(channel_id=channel_id, subreddit=subreddit):
+        elif models.Subscription.query.filter_by(channel_id=channel_id, subreddit=subreddit).first():
             error = f"{channel_id} is already subscribed for subreddit {subreddit}"
         elif validate_yt_channel(channel_id) is not True:
-            error = f"{channel_id} is an invalid youtube channel ID"
+            error = f"{channel_id.upper()} is an invalid youtube channel ID"
         elif validate_subreddit(subreddit) is not True:
             error = f"{subreddit} does not seem to exist"
 
@@ -30,7 +31,7 @@ def new():
         
         flash(error)
         
-        return render_template("subscriptions/new.html")
+    return render_template("subscriptions/new.html")
 
 
 def validate_subreddit(subreddit: str) -> bool:
@@ -39,13 +40,13 @@ def validate_subreddit(subreddit: str) -> bool:
 
 
 def validate_yt_channel(channel_id: str) -> bool:
-    url = "https://www.youtube.com/channel/{channeld_id}"
+    url = f"https://www.youtube.com/channel/{channel_id}"
     if not channel_id.lower().startswith("uc"):
         return False
     try:
         resp = requests.get(url)
         resp.raise_for_status() 
-    except HTTPError:
+    except requests.exceptions.HTTPError:
         current_app.logger.exception(f"invalid url: {url}")
         return False
     return True
