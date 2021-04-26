@@ -3,6 +3,7 @@ from urllib3.exceptions import HTTPError
 from yt_pubsub_handler import db
 from flask import Blueprint, request, current_app, flash, render_template
 from . import models
+from . import subscriptions_utils
 
 bp = Blueprint("subscriptions", __name__, url_prefix="/subscriptions")
 
@@ -18,9 +19,9 @@ def new():
             error = "subreddit is required"
         elif models.Subscription.query.filter_by(channel_id=channel_id, subreddit=subreddit).first():
             error = f"{channel_id} is already subscribed for subreddit {subreddit}"
-        elif validate_yt_channel(channel_id) is not True:
+        elif subscriptions_utils.validate_yt_channel(channel_id) is not True:
             error = f"{channel_id.upper()} is an invalid youtube channel ID"
-        elif validate_subreddit(subreddit) is not True:
+        elif subscriptions_utils.validate_subreddit(subreddit) is not True:
             error = f"{subreddit} does not seem to exist"
 
         if error is None:
@@ -32,23 +33,3 @@ def new():
         flash(error)
         
     return render_template("subscriptions/new.html")
-
-
-def validate_subreddit(subreddit: str) -> bool:
-    # not implemented yet
-    return True
-
-
-def validate_yt_channel(channel_id: str) -> bool:
-    url = f"https://www.youtube.com/channel/{channel_id}"
-    if not channel_id.lower().startswith("uc"):
-        return False
-    try:
-        resp = requests.get(url)
-        resp.raise_for_status() 
-    except requests.exceptions.HTTPError:
-        current_app.logger.exception(f"invalid url: {url}")
-        return False
-    return True
-        
-
