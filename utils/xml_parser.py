@@ -20,17 +20,18 @@ def parse_yt_xml(xml_body: str) -> (str, str):
 
 
 def is_new_upload_v2(video_id: str, channel_id: str):
-    fname = f"{channel_id}.csv"
+    fname = f"/app/{channel_id}.csv"
     if not os.path.isfile(fname):
         open(fname, 'a').close()
 
-    with open(fname) as csvfile:
+    with open(fname, 'a') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             if video_id in row:
                 return False  # not a new upload
 
     with open(fname, "a") as csvfile:
+        print(f"writing file {fname}")
         writer = csv.writer(csvfile)
         writer.writerow([video_id])
         return True
