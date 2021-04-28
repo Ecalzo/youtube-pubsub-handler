@@ -24,7 +24,7 @@ def is_new_upload_v2(video_id: str, channel_id: str):
     if not os.path.isfile(fname):
         open(fname, 'a').close()
 
-    with open(fname, 'a') as csvfile:
+    with open(fname) as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             if video_id in row:
