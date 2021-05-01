@@ -1,7 +1,6 @@
 import pytest
 from . import models
 
-db = models.db
 CHANNEL_ID = "UCYO_jab_esuFRV4b17AJtAw"
 SUBREDDIT = "pics"
 
