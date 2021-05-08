@@ -25,7 +25,7 @@ class Lease(db.Model):
     updated_at = db.Column(db.DateTime(timezone=True), default=datetime.utcnow())
 
     def __repr__(self):
-        return f"<Lease {self.channel_id}"
+        return f"<Lease {self.channel_id}>"
 
 
 class Subscription(db.Model):
@@ -34,4 +34,4 @@ class Subscription(db.Model):
     subreddit = db.Column(db.String(), nullable=False)
 
     def __repr__(self):
-        return f"Subscription {self.id} {self.channel_id} {self.subreddit}"
+        return f"Subscription {self.id} {self.channel_id} {self.subreddit}>"
