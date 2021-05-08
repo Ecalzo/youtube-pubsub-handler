@@ -17,25 +17,20 @@ def hook():
         args = request.args
         # get the data from the lease request
         channel_id = extract_channel_id(args["hub.topic"])
-        lease_row = models.Lease.query.filter_by(channel_id=channel_id)
-        if lease_row.first() and args["hub.mode"] == "subscribe":
+        lease_row = models.Lease.query.filter_by(channel_id=channel_id).first()
+        if lease_row and args["hub.mode"] == "subscribe":
             # update record w/ new lease
-            lease_row.update(
-                dict(
-                    lease_start_ts=datetime.utcnow(),
-                    lease_expire_ts=datetime.utcnow() + timedelta(seconds=int(args["hub.lease_seconds"])),
-                    updated_at=datetime.utcnow()
-                )
-            )
+            lease_row.lease_start_ts = datetime.utcnow()
+            lease_row.lease_expire_ts = datetime.utcnow() + timedelta(seconds=int(args["hub.lease_seconds"]))
+            lease_row.updated_at = datetime.utcnow() + timedelta(seconds=60000)
             db.session.commit()
-        elif lease_row.first() and args["hub.mode"] == "unsubscribe":
+        elif lease_row and args["hub.mode"] == "unsubscribe":
             # unsubscribe
             current_app.logger.info(f"unsubscribing {channel_id}")
-            lease_row.delete()
+            db.session.delete(lease_row)
             db.session.commit()
         else:  # this is a new lease
             if args["hub.mode"] == "subscribe":
-                print("subscribe time")
                 new_lease = models.Lease(
                     channel_id=channel_id,
                     lease_start_ts=datetime.utcnow(),
