@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import datetime
 
+
 class PSH_XML():
     def __init__(self, data):
         self.data = data
@@ -15,7 +16,7 @@ class PSH_XML():
         url = entry.find("{http://www.w3.org/2005/Atom}link").attrib["href"]
         published = entry.find("{http://www.w3.org/2005/Atom}published").text
         updated = entry.find("{http://www.w3.org/2005/Atom}updated").text
-        
+
         published_dt, updated_dt = self._parse_xml_dates(published, updated)
         # accessors
         self.video_id = video_id

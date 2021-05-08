@@ -43,7 +43,8 @@ def hook():
 
     if request.method == "POST":
         xml = xml_utils.PSH_XML(data)
-        if models.Post.query.filter_by(video_id=xml.video_id).first():  # already posted
+        if models.Post.query.filter_by(video_id=xml.video_id).first():
+            # already posted
             current_app.logger.info(f"video {xml.video_id} has already been posted")
             return "already posted, but thanks"
         else:  # new post
@@ -54,18 +55,19 @@ def hook():
             current_app.logger.info(f"creating new post for video: {xml.title}, channel: {xml.channel_id}")
 
             new_post = models.Post(
-                    video_id=xml.video_id,
-                    channel_id=xml.channel_id,
-                    title=xml.title,
-                    published=xml.published,
-                    updated=xml.updated
-                    )
+                video_id=xml.video_id,
+                channel_id=xml.channel_id,
+                title=xml.title,
+                published=xml.published,
+                updated=xml.updated
+            )
             db.session.add(new_post)
             db.session.commit()
             for subreddit in subreddits:
                 # make post here
-                print(f"posting to sub {subreddit}")
-                reddit_make_post(subreddit, xml.title, xml.url)
+                current_app.logger.info(f"posting to sub {subreddit}")
+                if not current_app.config["TESTING"]:
+                    reddit_make_post(subreddit, xml.title, xml.url)
             return "200"
 
 

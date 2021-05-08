@@ -39,3 +39,23 @@ def test_pubsubhub_get(client, app):
     assert client.get(test_query.format(hub_mode="unsubscribe")).status_code == 200
     with app.app_context():
         assert models.Lease.query.filter_by(channel_id=CHANNEL_ID).first() is None
+
+
+def test_pubusbhub_post(client, app):
+    populate_subscriptions(client)
+    with open("test.xml", "r") as xml_file:
+        xml = xml_file.read()
+
+    # make a post with the test xml
+    assert client.post("pubsubhub/hook", data=xml).data == b"200"
+
+    # assert that you can't make the same post twice
+    assert client.post("pubsubhub/hook", data=xml).data == b"already posted, but thanks"
+
+
+def populate_subscriptions(client):
+    for subreddit in ["pics", "doge", "science", "woodworking"]:
+        client.post(
+            "subscriptions/new",
+            data={"channel_id": "UCtEorrVfo4GQsN82HsrnKyk", "subreddit": subreddit}
+        )
