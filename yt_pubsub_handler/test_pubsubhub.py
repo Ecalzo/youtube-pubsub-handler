@@ -21,8 +21,6 @@ def test_pubsubhub_get(client, app):
             "updated_at": lease.updated_at
         }
     # send the same subscription request to update the record
-    import time
-    time.sleep(2)
     client.get(test_query.format(hub_mode="subscribe")).data == b"9156451986150874295"
     with app.app_context():
         new_lease = models.Lease.query.filter_by(channel_id=CHANNEL_ID).first()
