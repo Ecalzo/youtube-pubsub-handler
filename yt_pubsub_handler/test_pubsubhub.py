@@ -33,9 +33,7 @@ def test_pubsubhub_get(client, app):
         }
     # compare the timestamps to make sure the ts were updated in the db
     for column in original_ts_map:
-        print(column)
         assert original_ts_map[column] < new_ts_map[column]
-        # import pdb;pdb.set_trace()
 
     # testing lease is removed from db
     assert client.get(test_query.format(hub_mode="unsubscribe")).status_code == 200
