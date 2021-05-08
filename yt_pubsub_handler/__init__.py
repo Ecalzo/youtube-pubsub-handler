@@ -2,9 +2,10 @@ import os
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from . import models 
+from . import models
 
 db = models.db
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -29,14 +30,17 @@ def create_app(test_config=None):
     @app.route("/hello")
     def hello():
         return "Hello, World!"
- 
+
     db.app = app
     db.init_app(app)
+    # sets up flask init-db cmd
     from . import db_utils
     db_utils.init_app(app)
+    # sets up flask renew-leases cmd
+    from . import lease_utils
+    lease_utils.init_app(app)
     from . import pubsubhub
     app.register_blueprint(pubsubhub.bp)
     from . import subscriptions
     app.register_blueprint(subscriptions.bp)
     return app
-
