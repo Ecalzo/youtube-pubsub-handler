@@ -22,6 +22,7 @@ test_xml = """<?xml version="1.0" encoding="UTF-8"?>
   </entry>
 </feed>"""
 
+
 def test_xml_utils():
     xml = xml_utils.PSH_XML(test_xml)
 
@@ -31,4 +32,3 @@ def test_xml_utils():
     assert xml.url == "https://www.youtube.com/watch?v=_em_FFNUcvs"
     assert xml.published == datetime.datetime(2018, 12, 12, 5, 57, 7, tzinfo=datetime.timezone.utc)
     assert xml.updated == datetime.datetime(2018, 12, 12, 6, 2, 55, tzinfo=datetime.timezone.utc)
-

@@ -7,7 +7,7 @@ class PSH_XML():
         self.data = data
         self.parse_yt_xml(xml_body=data)
 
-    def parse_yt_xml(self, xml_body: str): 
+    def parse_yt_xml(self, xml_body: str):
         root = ET.fromstring(xml_body)
         entry = root.find("{http://www.w3.org/2005/Atom}entry")
         video_id = entry.find("{http://www.youtube.com/xml/schemas/2015}videoId").text
@@ -37,4 +37,3 @@ class PSH_XML():
         date_time = splt[0]
         tz_info = splt[-1].split("+")[-1]
         return "+".join([date_time, tz_info])
-
