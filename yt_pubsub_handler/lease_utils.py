@@ -29,7 +29,7 @@ def renew_lease(channel_id: str):
     headers = {
         "authority": "pubsubhubbub.appspot.com",
         "cache-control": "max-age=0",
-        "sec-ch-ua": "" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"",
+        "sec-ch-ua":  '" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"',
         "sec-ch-ua-mobile": "?0",
         "upgrade-insecure-requests": "1",
         "origin": "https://pubsubhubbub.appspot.com",
