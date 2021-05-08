@@ -3,6 +3,7 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+
 class Post(db.Model):
     video_id = db.Column(db.String(), unique=True, nullable=False, primary_key=True)
     channel_id = db.Column(db.String(), unique=False, nullable=False)
@@ -13,7 +14,7 @@ class Post(db.Model):
     updated_at = db.Column(db.DateTime(timezone=True), default=datetime.utcnow())
 
     def __repr__(self):
-        return f"<Post {self.video_id}>" 
+        return f"<Post {self.video_id}>"
 
 
 class Lease(db.Model):
@@ -34,4 +35,3 @@ class Subscription(db.Model):
 
     def __repr__(self):
         return f"Subscription {self.id} {self.channel_id} {self.subreddit}"
-

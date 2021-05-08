@@ -27,4 +27,3 @@ def test_subscriptions_validate_input(client, channel_id, subreddit, message):
         data={"channel_id": channel_id, "subreddit": subreddit}
     )
     assert message in response.data
-

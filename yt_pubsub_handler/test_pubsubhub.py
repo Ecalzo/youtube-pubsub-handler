@@ -41,4 +41,3 @@ def test_pubsubhub_get(client, app):
     assert client.get(test_query.format(hub_mode="unsubscribe")).status_code == 200
     with app.app_context():
         assert models.Lease.query.filter_by(channel_id=CHANNEL_ID).first() is None
-

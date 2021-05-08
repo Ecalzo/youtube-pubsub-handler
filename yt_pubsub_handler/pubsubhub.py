@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 
 bp = Blueprint("pubsubhub", __name__, url_prefix="/pubsubhub")
 
+
 @bp.route("/hook", methods=("GET", "POST"))
 def hook():
     request.get_data()
@@ -43,13 +44,13 @@ def hook():
     if request.method == "POST":
         xml = xml_utils.PSH_XML(data)
         if models.Post.query.filter_by(video_id=xml.video_id).first():  # already posted
-           current_app.logger.info(f"video {xml.video_id} has already been posted")
-           return "already posted, but thanks"
+            current_app.logger.info(f"video {xml.video_id} has already been posted")
+            return "already posted, but thanks"
         else:  # new post
             # get list of subreddits to post to
             subs_results = models.Subscription.query.filter_by(channel_id=xml.channel_id)
             subreddits = get_subs_for_channel(query_results=subs_results)
-            
+
             current_app.logger.info(f"creating new post for video: {xml.title}, channel: {xml.channel_id}")
 
             new_post = models.Post(
@@ -65,7 +66,7 @@ def hook():
                 # make post here
                 print(f"posting to sub {subreddit}")
                 reddit_make_post(subreddit, xml.title, xml.url)
-            return "200" 
+            return "200"
 
 
 def get_subs_for_channel(query_results):
@@ -74,11 +75,10 @@ def get_subs_for_channel(query_results):
     subreddits = set()
     for result in query_results:
         subreddits.add(result.subreddit)
-    return subreddits 
+    return subreddits
 
 
 def extract_channel_id(url: str) -> str:
     "looks like https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCma-7DYdsG6CrEj-h1OPOaA"
     parsed = urlparse.urlparse(url)
     return parse_qs(parsed.query)["channel_id"][0]
-
