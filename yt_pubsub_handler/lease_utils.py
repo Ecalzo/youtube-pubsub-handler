@@ -1,30 +1,25 @@
 import requests
-from Flask import current_app, request
+from flask import Flask, current_app, request
 from datetime import datetime, timedelta
-import click
 from . import models
 
 
-def init_app(app):
-    app.cli.add_command(query_for_stale_leases)
-
-
-@click.command("renew-leases")
-@with_appcontext
-def query_for_stale_leases():
+def renew_leases(app: Flask):
     # check for leases that expire in 24 hours
-    threshold = datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
-    current_app.logger.info(f"querying for leases that expire before {threshold}")
-    exp_leases = models.Lease.query.filter(models.Lease.lease_expire_ts < threshold)
-    if exp_leases.first():
-        for lease in exp_leases:
-            current_app.logger.info(f"renewing lease for https://youtube.com/channel/{lease.channel_id}")
-            renew_lease(lease.channel_id)
-    else:
-        current_app.logger.info(f"no leases to renew, bye!")
+    # with yt_pubsub_handler.app_context():
+    with app.app_context():
+        threshold = datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
+        current_app.logger.info(f"querying for leases that expire before {threshold}")
+        exp_leases = models.Lease.query.filter(models.Lease.lease_expire_ts < threshold)
+        if exp_leases.first():
+            for lease in exp_leases:
+                current_app.logger.info(f"renewing lease for https://youtube.com/channel/{lease.channel_id}")
+                request_new_lease(lease.channel_id)
+        else:
+            current_app.logger.info(f"no leases to renew, bye!")
 
 
-def renew_lease(channel_id: str):
+def request_new_lease(channel_id: str):
     # helper function to renew a lease with pubsubhub
     headers = {
         "authority": "pubsubhubbub.appspot.com",
