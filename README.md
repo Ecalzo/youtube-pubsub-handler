@@ -1,3 +1,26 @@
+# TODO
+* Set up some cloud db (considering aws aurora)
+* initialize secrets in some `env.json` and push to a bucket, should look like:
+```json
+// env.json
+{
+    "DATABASE_URL": "",
+    "SECRET_KEY": ""
+}
+```
+and
+```json
+//zappa_settings.json
+{
+    "dev": {
+        ...
+        "remote_env": "s3://my-config-bucket/super-secret-config.json",
+    },
+    ...
+
+```
+* Test a bunch
+
 # Readings/Debugging
 * https://stackoverflow.com/questions/3007253/send-post-xml-file-using-curl-command-line
 * https://stackoverflow.com/questions/49901197/flask-api-to-parse-xml-post-requests-returning-errors
