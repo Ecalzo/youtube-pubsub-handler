@@ -8,6 +8,10 @@ from . import models
 @click.command("init-db")
 @with_appcontext
 def init_db_command():
+    init_db()
+
+
+def init_db():
     print("creating database")
     models.db.create_all()
     print("database created")
