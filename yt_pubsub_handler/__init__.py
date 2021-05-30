@@ -1,7 +1,6 @@
 import os
 
 from flask import Flask
-from flask_apscheduler import APScheduler
 from flask_sqlalchemy import SQLAlchemy
 from . import models
 
@@ -30,7 +29,7 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route("/hello")
+    @app.route("/")
     def hello():
         return "Hello, World!"
 
@@ -38,7 +37,7 @@ def create_app(test_config=None):
     @app.route("/renew_leases")
     def renew_lease():
         from . import lease_utils
-        lease_utils.renew_leases()
+        lease_utils.renew_leases(app)
         return "lease renew triggered"
 
 
