@@ -4,7 +4,6 @@ from flask import Flask
 from flask_apscheduler import APScheduler
 from flask_sqlalchemy import SQLAlchemy
 from . import models
-from . import lease_utils
 
 
 db = models.db
@@ -35,21 +34,19 @@ def create_app(test_config=None):
     def hello():
         return "Hello, World!"
 
+
+    @app.route("/renew_leases")
+    def renew_lease():
+        from . import lease_utils
+        lease_utils.renew_leases()
+        return "lease renew triggered"
+
+
     db.app = app
     db.init_app(app)
     # sets up flask init-db cmd
     from . import db_utils
     db_utils.init_app(app)
-    # sets up flask renew-leases cmd
-    # lease_utils.init_app(app)
-    scheduler = APScheduler()
-
-    @scheduler.task("interval", id="renew-leases", hours=10, misfire_grace_time=900, kwargs={"app": app})
-    def renew_leases(app: Flask):
-        lease_utils.renew_leases(app)
-
-    scheduler.init_app(app)
-    scheduler.start()
 
     from . import pubsubhub
     app.register_blueprint(pubsubhub.bp)
