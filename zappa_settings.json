@@ -1,10 +1,14 @@
 {
     "dev": {
-        "app_function": "yt_pubsub_handler.__init__.app",
+        "app_function": "run.app",
         "aws_region": "us-east-1",
         "profile_name": "default",
         "project_name": "youtube-pubsub-handler",
         "runtime": "python3.8",
-        "s3_bucket": "zappa-yt-pubsub-handler"
+        "s3_bucket": "zappa-yt-pubsub-handler",
+        "events": [{
+            "function": "run.run_renew_leases",
+            "expression": "rate(1 hour)"
+        }]
     }
 }
