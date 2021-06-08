@@ -1,12 +1,6 @@
-# Readings/Debugging
-* https://stackoverflow.com/questions/3007253/send-post-xml-file-using-curl-command-line
-* https://stackoverflow.com/questions/49901197/flask-api-to-parse-xml-post-requests-returning-errors
-* https://stackoverflow.com/questions/10999990/get-raw-post-body-in-python-flask-regardless-of-content-type-header
-* https://blog.superfeedr.com/howto-pubsubhubbub/
-* https://pubsubhubbub.appspot.com/subscribe
-* https://developers.google.com/youtube/v3/guides/push_notifications
-
-random SO links to save while I'm switching computers
+# Roadmap
+* Currently moving this to the create_app pattern (mostly complete) - [branch link](https://github.com/Ecalzo/youtube-pubsub-handler/tree/create-app-pattern)
+* Setting up deployments with Zappa (mostly complete) - [branch link](https://github.com/Ecalzo/youtube-pubsub-handler/tree/port-to-zappa)
 
 # Test out the endpoint
 ```shell
@@ -23,3 +17,10 @@ pubsubhub sends push notifications for new video uploads. We subscribe with one 
 	* check if the published v. updated timestamps match. If not.. don't post
 	* this is an assumption and needs some testing
 
+# Readings/Links
+* https://stackoverflow.com/questions/3007253/send-post-xml-file-using-curl-command-line
+* https://stackoverflow.com/questions/49901197/flask-api-to-parse-xml-post-requests-returning-errors
+* https://stackoverflow.com/questions/10999990/get-raw-post-body-in-python-flask-regardless-of-content-type-header
+* https://blog.superfeedr.com/howto-pubsubhubbub/
+* https://pubsubhubbub.appspot.com/subscribe
+* https://developers.google.com/youtube/v3/guides/push_notifications
