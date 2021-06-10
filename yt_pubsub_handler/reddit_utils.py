@@ -1,13 +1,13 @@
 import praw
 import os
 import time
-from flask import Flask
+from flask import Flask, current_app
 
-def reddit_login(app: Flask) -> [praw.Reddit, None]:
+def reddit_login() -> [praw.Reddit, None]:
     """attempts to log in to reddit, retries 3 times"""
     attempts = 0
     reddit = None
-    app.logger.info("logging in to reddit")
+    current_app.logger.info("logging in to reddit")
     while attempts < 3:
         try:
             reddit = praw.Reddit(
@@ -17,16 +17,17 @@ def reddit_login(app: Flask) -> [praw.Reddit, None]:
                 username = os.getenv("reddit_username"),
                 password = os.getenv("reddit_password")
             )
-            app.logger.info(f"successfully logged into reddit user: {os.getenv('reddit_username')}")
+            current_app.logger.info(f"successfully logged into reddit user: {os.getenv('reddit_username')}")
             break
         except:
-            app.logger.exception(f"failed to log in to reddit, attempt: {attempts + 1}/3")
+            current_app.logger.exception(f"failed to log in to reddit, attempt: {attempts + 1}/3")
         attemps += 1
         time.sleep(10)
     return reddit
 
-def reddit_make_post(subreddit: str, title: str, url: str, app: Flask) -> praw.models.Submission:
-    app.logger.info(f"making post to subreddit: {subreddit}, title: {title}, url: {url}")
+
+def reddit_make_post(subreddit: str, title: str, url: str) -> praw.models.Submission:
+    current_app.logger.info(f"making post to subreddit: {subreddit}, title: {title}, url: {url}")
     post = None
     try:
         reddit = reddit_login(app=app)
@@ -35,8 +36,8 @@ def reddit_make_post(subreddit: str, title: str, url: str, app: Flask) -> praw.m
            title=title,
            url=url
         )
-        app.logger.info(f"post successful, view: https://reddit.com/{post.permalink}")
+        current_app.logger.info(f"post successful, view: https://reddit.com/{post.permalink}")
     except:
-        app.logger.exception("failed to make post, something went wrong")
+        current_app.logger.exception("failed to make post, something went wrong")
     return post
 

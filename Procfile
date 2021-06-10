@@ -1,1 +1,2 @@
-web: gunicorn app:app --log-level=info
+release: bash prod_setup.sh
+web: gunicorn "yt_pubsub_handler:create_app()" --log-level=info
