@@ -1,10 +1,8 @@
 import os
 
 from flask import Flask
-from flask_apscheduler import APScheduler
 from flask_sqlalchemy import SQLAlchemy
 from . import models
-from . import lease_utils
 
 
 db = models.db
@@ -13,7 +11,7 @@ db = models.db
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY='dev',
+        SECRET_KEY=os.getenv("SECRET_KEY", 'dev'),
         SQLALCHEMY_DATABASE_URI=os.getenv("DATABASE_URL", "sqlite:///yt_pubsub_handler.db"),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         SCHEDULER_API_ENABLED=True
@@ -31,25 +29,23 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route("/hello")
+    @app.route("/")
     def hello():
         return "Hello, World!"
+
+
+    @app.route("/renew_leases")
+    def renew_lease():
+        from . import lease_utils
+        lease_utils.renew_leases(app)
+        return "lease renew triggered"
+
 
     db.app = app
     db.init_app(app)
     # sets up flask init-db cmd
     from . import db_utils
     db_utils.init_app(app)
-    # sets up flask renew-leases cmd
-    # lease_utils.init_app(app)
-    scheduler = APScheduler()
-
-    @scheduler.task("interval", id="renew-leases", hours=10, misfire_grace_time=900, kwargs={"app": app})
-    def renew_leases(app: Flask):
-        lease_utils.renew_leases(app)
-
-    scheduler.init_app(app)
-    scheduler.start()
 
     from . import pubsubhub
     app.register_blueprint(pubsubhub.bp)
