@@ -48,9 +48,3 @@ pubsubhub sends push notifications for new video uploads. We subscribe with one 
 	3. else, check which subreddits are queried per channel ID
 	4. `models.Subscriptions.query.filter_by(channel_id=channel_id)` then parse out all values in the subreddit column
 The above is complete
-
-TODO:
-* !!!start blueprint for registering a new subreddit - this is prob the most important - DONE
-* push new posts to some mongo db instance or something
-* write tests for xml_utils
-* start database tests 
