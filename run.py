@@ -9,4 +9,4 @@ def run_renew_leases():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
