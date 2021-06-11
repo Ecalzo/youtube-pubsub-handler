@@ -1,5 +1,5 @@
 # What is this doing?
-pubsubhub sends push notifications for new video uploads. We subscribe with one of the links above and acknowledge the GET request from pubsubhub by serving its challenge, seen as `request.args["hub.challenge"]` in `app.py`. Now we should receive POST requests containing XML data about the new uploads for the YT channel we subscribed to. Thats it for now, in the future we would like to integrate this into a reddit mod bot to post about the new uploads.
+Youtube uses pubsubhub to send push notifications for new video uploads. This app subscribes when a user requests a channel ID to be linked to a subreddit. This handshake occurs when the app acknowledges the GET request from pubsubhub by serving its challenge in the http response (seen as `request.args["hub.challenge"]`). Now we should receive POST requests containing XML data about the new uploads for the YT channel the app is subscribed to. This app then regularly keep leases from pubsubhub "fresh" by renewing leases in its database that may expire in the near future.
 
 # Endpoints
 * `/pubsubhub/hook` the hook to use with [pubsubhub](https://pubsubhubbub.appspot.com/subscribe)
