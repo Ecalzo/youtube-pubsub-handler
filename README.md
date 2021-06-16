@@ -3,12 +3,13 @@ Youtube uses pubsubhub to send push notifications for new video uploads. This ap
 
 # Endpoints
 * `/pubsubhub/hook` the hook to use with [pubsubhub](https://pubsubhubbub.appspot.com/subscribe)
-* `/subscription/new` endpoint for creating a new subscription for a channel + subreddit
+* `/subscriptions/new` endpoint for creating a new subscription for a channel + subreddit
 
 # Deployment
 1. `zappa deploy production` this will also create the bucket specified in the `s3_bucket` section of `zappa_settings.json`
 2. Ensure that an `env.json` is in the bucket project
     * ex: if `"remote_env": "s3://zappa-yt-pubsub-handler-production/env.json"` then the `env.json` should be place in the appropriate bucket after deploy
+3. Set up db: `zappa invoke dev 'yt_pubsub_handler.db_utils.init_db'`
 
 # env.json
 ```json
