@@ -4,6 +4,7 @@ from yt_pubsub_handler import db
 from flask import Blueprint, request, current_app, flash, render_template
 from . import models
 from . import subscriptions_utils
+from . import lease_utils
 
 bp = Blueprint("subscriptions", __name__, url_prefix="/subscriptions")
 
@@ -25,11 +26,12 @@ def new():
             error = f"{subreddit} does not seem to exist"
 
         if error is None:
+            lease_utils.request_new_lease(channel_id=channel_id)
             new_sub = models.Subscription(channel_id=channel_id, subreddit=subreddit)
             db.session.add(new_sub)
             db.session.commit()
             return f"successfully subscribed {channel_id} for subreddit {subreddit}"
-        
+
         flash(error)
-        
+
     return render_template("subscriptions/new.html")
