@@ -23,7 +23,7 @@ def hook():
             # update record w/ new lease
             lease_row.lease_start_ts = datetime.utcnow()
             lease_row.lease_expire_ts = datetime.utcnow() + timedelta(seconds=int(args["hub.lease_seconds"]))
-            lease_row.updated_at = datetime.utcnow() + timedelta(seconds=60000)
+            lease_row.updated_at = datetime.utcnow()
             db.session.commit()
         elif lease_row and args["hub.mode"] == "unsubscribe":
             # unsubscribe
