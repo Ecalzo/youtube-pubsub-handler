@@ -54,20 +54,22 @@ def hook():
 
             current_app.logger.info(f"creating new post for video: {xml.title}, channel: {xml.channel_id}")
 
-            new_post = models.Post(
-                video_id=xml.video_id,
-                channel_id=xml.channel_id,
-                title=xml.title,
-                published=xml.published,
-                updated=xml.updated
-            )
-            db.session.add(new_post)
-            db.session.commit()
-            for subreddit in subreddits:
-                # make post here
-                current_app.logger.info(f"posting to sub {subreddit}")
-                if not current_app.config["TESTING"]:
-                    reddit_utils.reddit_make_post(subreddit, xml.title, xml.url)
+            current_app.logger.info(f"{len(subreddits)} for channel: {xml.channel_id}")
+            if subreddits:
+                for subreddit in subreddits:
+                    # make post here
+                    current_app.logger.info(f"posting to sub {subreddit}")
+                    if not current_app.config["TESTING"]:
+                        reddit_utils.reddit_make_post(subreddit, xml.title, xml.url)
+                new_post = models.Post(
+                    video_id=xml.video_id,
+                    channel_id=xml.channel_id,
+                    title=xml.title,
+                    published=xml.published,
+                    updated=xml.updated
+                )
+                db.session.add(new_post)
+                db.session.commit()
             return "200"
 
 
