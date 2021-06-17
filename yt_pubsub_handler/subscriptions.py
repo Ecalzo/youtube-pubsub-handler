@@ -27,7 +27,7 @@ def new():
 
         if error is None:
             lease_utils.request_new_lease(channel_id=channel_id)
-            new_sub = models.Subscription(channel_id=channel_id, subreddit=subreddit)
+            new_sub = models.Subscription(channel_id=channel_id.upper(), subreddit=subreddit)
             db.session.add(new_sub)
             db.session.commit()
             return f"successfully subscribed {channel_id} for subreddit {subreddit}"

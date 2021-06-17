@@ -11,7 +11,7 @@ class PSH_XML():
         root = ET.fromstring(xml_body)
         entry = root.find("{http://www.w3.org/2005/Atom}entry")
         video_id = entry.find("{http://www.youtube.com/xml/schemas/2015}videoId").text
-        channel_id = entry.find("{http://www.youtube.com/xml/schemas/2015}channelId").text
+        channel_id = entry.find("{http://www.youtube.com/xml/schemas/2015}channelId").text.upper()
         title = entry.find("{http://www.w3.org/2005/Atom}title").text
         url = entry.find("{http://www.w3.org/2005/Atom}link").attrib["href"]
         published = entry.find("{http://www.w3.org/2005/Atom}published").text
