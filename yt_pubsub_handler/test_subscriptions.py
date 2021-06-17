@@ -12,14 +12,14 @@ def test_subscriptions(client, app):
     )
     with app.app_context():
         assert models.Subscription.query.filter_by(
-            channel_id=CHANNEL_ID, subreddit=SUBREDDIT).first() is not None
+            channel_id=CHANNEL_ID.upper(), subreddit=SUBREDDIT.upper()).first() is not None
 
 
 @pytest.mark.parametrize(("channel_id", "subreddit", "message"), (
     ("", "", b"channel_id is required"),
     (CHANNEL_ID, "", b"subreddit is required"),
     (CHANNEL_ID, SUBREDDIT,
-     b"UCYO_jab_esuFRV4b17AJtAw is already subscribed for subreddit pics")
+     b"UCYO_JAB_ESUFRV4B17AJTAW is already subscribed for subreddit PICS")
 ))
 def test_subscriptions_validate_input(client, channel_id, subreddit, message):
     response = client.post(

@@ -11,8 +11,8 @@ bp = Blueprint("subscriptions", __name__, url_prefix="/subscriptions")
 @bp.route("/new", methods=("GET", "POST"))
 def new():
     if request.method == "POST":
-        channel_id = request.form["channel_id"]
-        subreddit = request.form["subreddit"]
+        channel_id = request.form["channel_id"].upper()
+        subreddit = request.form["subreddit"].upper()
         error = None
         if not channel_id:
             error = "channel_id is required"
@@ -27,7 +27,7 @@ def new():
 
         if error is None:
             lease_utils.request_new_lease(channel_id=channel_id)
-            new_sub = models.Subscription(channel_id=channel_id.upper(), subreddit=subreddit)
+            new_sub = models.Subscription(channel_id=channel_id, subreddit=subreddit)
             db.session.add(new_sub)
             db.session.commit()
             return f"successfully subscribed {channel_id} for subreddit {subreddit}"

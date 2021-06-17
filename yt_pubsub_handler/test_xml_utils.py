@@ -27,7 +27,7 @@ def test_xml_utils():
     xml = xml_utils.PSH_XML(test_xml)
 
     assert xml.video_id == "_em_FFNUcvs"
-    assert xml.channel_id == "UCtEorrVfo4GQsN82HsrnKyk"
+    assert xml.channel_id == "UCtEorrVfo4GQsN82HsrnKyk".upper()
     assert xml.title == "December 12, 20"
     assert xml.url == "https://www.youtube.com/watch?v=_em_FFNUcvs"
     assert xml.published == datetime.datetime(2018, 12, 12, 5, 57, 7, tzinfo=datetime.timezone.utc)
