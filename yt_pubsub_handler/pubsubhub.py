@@ -85,4 +85,4 @@ def get_subs_for_channel(query_results):
 def extract_channel_id(url: str) -> str:
     "looks like https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCma-7DYdsG6CrEj-h1OPOaA"
     parsed = urlparse.urlparse(url)
-    return parse_qs(parsed.query)["channel_id"][0]
+    return parse_qs(parsed.query)["channel_id"][0].upper()

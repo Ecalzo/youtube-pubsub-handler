@@ -12,7 +12,7 @@ def test_pubsubhub_get(client, app):
     assert client.get(test_query.format(hub_mode="subscribe")).data == b"9156451986150874295"
     # testing new lease is added to db
     with app.app_context():
-        lease = models.Lease.query.filter_by(channel_id=CHANNEL_ID).first()
+        lease = models.Lease.query.filter_by(channel_id=CHANNEL_ID.upper()).first()
         assert lease is not None
         # grab the timestamps so we can compare to an update GET request
         original_ts_map = {
@@ -23,7 +23,7 @@ def test_pubsubhub_get(client, app):
     # send the same subscription request to update the record
     client.get(test_query.format(hub_mode="subscribe")).data == b"9156451986150874295"
     with app.app_context():
-        new_lease = models.Lease.query.filter_by(channel_id=CHANNEL_ID).first()
+        new_lease = models.Lease.query.filter_by(channel_id=CHANNEL_ID.upper()).first()
         new_ts_map = {
             "lease_start_ts": new_lease.lease_start_ts,
             "lease_expire_ts": new_lease.lease_expire_ts,
@@ -36,7 +36,7 @@ def test_pubsubhub_get(client, app):
     # testing lease is removed from db
     assert client.get(test_query.format(hub_mode="unsubscribe")).status_code == 200
     with app.app_context():
-        assert models.Lease.query.filter_by(channel_id=CHANNEL_ID).first() is None
+        assert models.Lease.query.filter_by(channel_id=CHANNEL_ID.upper()).first() is None
 
 
 def test_pubusbhub_post(client, app):
@@ -46,7 +46,6 @@ def test_pubusbhub_post(client, app):
 
     # make a post with the test xml
     assert client.post("pubsubhub/hook", data=xml).data == b"200"
-
     # assert that you can't make the same post twice
     assert client.post("pubsubhub/hook", data=xml).data == b"already posted, but thanks"
 
@@ -55,5 +54,5 @@ def populate_subscriptions(client):
     for subreddit in ["pics", "doge", "science", "woodworking"]:
         client.post(
             "subscriptions/new",
-            data={"channel_id": "UCtEorrVfo4GQsN82HsrnKyk", "subreddit": subreddit}
+            data={"channel_id": "UCTEORRVFO4GQSN82HSRNKYK", "subreddit": subreddit}
         )
