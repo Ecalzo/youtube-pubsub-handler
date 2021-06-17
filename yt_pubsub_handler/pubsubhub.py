@@ -67,7 +67,7 @@ def hook():
                 # make post here
                 current_app.logger.info(f"posting to sub {subreddit}")
                 if not current_app.config["TESTING"]:
-                    reddit_make_post(subreddit, xml.title, xml.url)
+                    reddit_utils.reddit_make_post(subreddit, xml.title, xml.url)
             return "200"
 
 
