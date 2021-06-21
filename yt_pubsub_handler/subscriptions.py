@@ -26,7 +26,11 @@ def new():
             error = f"{subreddit} does not seem to exist"
 
         if error is None:
-            lease_utils.request_new_lease(channel_id=channel_id)
+            if not current_app.config["TESTING"]:
+                lease_utils.request_new_lease(channel_id=channel_id)
+                is_verified = lease_utils.ensure_lease_sucess(channel_id=channel_id)
+                if not is_verified:
+                    raise Exception(f"error creating lease for {channel_id}")
             new_sub = models.Subscription(channel_id=channel_id, subreddit=subreddit.lower())
             db.session.add(new_sub)
             db.session.commit()
