@@ -18,7 +18,7 @@ def new():
             error = "channel_id is required"
         elif not subreddit:
             error = "subreddit is required"
-        elif models.Subscription.query.filter_by(channel_id=channel_id, subreddit=subreddit).first():
+        elif models.Subscription.query.filter_by(channel_id=channel_id, subreddit=subreddit.lower()).first():
             error = f"{channel_id} is already subscribed for subreddit {subreddit}"
         elif subscriptions_utils.validate_yt_channel(channel_id) is not True:
             error = f"{channel_id} is an invalid youtube channel ID"
@@ -27,7 +27,7 @@ def new():
 
         if error is None:
             lease_utils.request_new_lease(channel_id=channel_id)
-            new_sub = models.Subscription(channel_id=channel_id, subreddit=subreddit)
+            new_sub = models.Subscription(channel_id=channel_id, subreddit=subreddit.lower())
             db.session.add(new_sub)
             db.session.commit()
             return f"successfully subscribed {channel_id} for subreddit {subreddit}"
