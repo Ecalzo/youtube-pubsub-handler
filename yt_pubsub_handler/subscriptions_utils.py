@@ -13,7 +13,9 @@ def validate_yt_channel(channel_id: str) -> bool:
         return False
     try:
         resp = requests.get(url)
-        resp.raise_for_status() 
+        resp.raise_for_status()
+        if 'This channel does not exist.' in resp.text:
+            return False
     except requests.exceptions.HTTPError:
         current_app.logger.exception(f"invalid url: {url}")
         return False
