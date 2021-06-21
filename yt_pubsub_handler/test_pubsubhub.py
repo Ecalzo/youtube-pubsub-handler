@@ -55,5 +55,5 @@ def populate_subscriptions(client):
     for subreddit in ["pics", "doge", "science", "woodworking"]:
         client.post(
             "subscriptions/new",
-            data={"channel_id": "UCtEorrVfo4GQsN82HsrnKyk", "subreddit": subreddit}
+            data={"channel_id": "UCSHZKyawb77ixDdsGog4iWA", "subreddit": subreddit}
         )
