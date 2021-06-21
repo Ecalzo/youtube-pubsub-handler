@@ -21,7 +21,7 @@ def new():
         elif models.Subscription.query.filter_by(channel_id=channel_id, subreddit=subreddit).first():
             error = f"{channel_id} is already subscribed for subreddit {subreddit}"
         elif subscriptions_utils.validate_yt_channel(channel_id) is not True:
-            error = f"{channel_id.upper()} is an invalid youtube channel ID"
+            error = f"{channel_id} is an invalid youtube channel ID"
         elif subscriptions_utils.validate_subreddit(subreddit) is not True:
             error = f"{subreddit} does not seem to exist"
 
