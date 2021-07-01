@@ -5,11 +5,10 @@ from datetime import datetime, timedelta
 from . import models
 
 
-def renew_leases(app: Flask):
+def renew_leases(app: Flask, url_root: str = None):
     # check for leases that expire in 24 hours
     # with yt_pubsub_handler.app_context():
     with app.app_context():
-        url_root = os.getenv("URL_ROOT")
         threshold = datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
         current_app.logger.info(f"querying for leases that expire before {threshold}")
         exp_leases = models.Lease.query.filter(models.Lease.lease_expire_ts < threshold)
