@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from . import models
 
@@ -31,7 +31,7 @@ def create_app(test_config=None):
 
     @app.route("/")
     def hello():
-        return "Hello, World!"
+        return render_template("index.html")
 
 
     @app.route("/renew_leases")
