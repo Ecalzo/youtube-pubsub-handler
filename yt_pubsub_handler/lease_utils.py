@@ -1,10 +1,11 @@
 import requests
-from flask import Flask, current_app, request
+import os
+from flask import Flask, current_app, request, has_request_context
 from datetime import datetime, timedelta
 from . import models
 
 
-def renew_leases(app: Flask):
+def renew_leases(app: Flask, url_root: str = None):
     # check for leases that expire in 24 hours
     # with yt_pubsub_handler.app_context():
     with app.app_context():
@@ -14,12 +15,12 @@ def renew_leases(app: Flask):
         if exp_leases.first():
             for lease in exp_leases:
                 current_app.logger.info(f"renewing lease for https://youtube.com/channel/{lease.channel_id}")
-                request_new_lease(lease.channel_id)
+                request_new_lease(lease.channel_id, url_root=url_root)
         else:
             current_app.logger.info(f"no leases to renew, bye!")
 
 
-def request_new_lease(channel_id: str):
+def request_new_lease(channel_id: str, url_root: str = None):
     # helper function to renew a lease with pubsubhub
     headers = {
         "authority": "pubsubhubbub.appspot.com",
@@ -39,8 +40,15 @@ def request_new_lease(channel_id: str):
         "accept-language": "en-US,en;q=0.9",
     }
 
+    if url_root is not None:
+        root = url_root
+    elif has_request_context():
+        root = request.url_root
+    else:
+        raise Exception(f"No request context found, root provided: {url_root}")
+
     data = {
-        "hub.callback": f"{request.url_root}pubsubhub/hook",
+        "hub.callback": f"{root}pubsubhub/hook",
         "hub.topic": f"https://www.youtube.com/xml/feeds/videos.xml?channel_id={channel_id}",
         "hub.verify": "async",
         "hub.mode": "subscribe",

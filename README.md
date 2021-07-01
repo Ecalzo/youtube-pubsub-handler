@@ -19,6 +19,7 @@ Youtube uses pubsubhub to send push notifications for new video uploads. This ap
     "client_id": "", // reddit client id for account that makes posts
     "client_secret": "", // reddit client_secret
     "reddit_password": "", // reddit pw
-    "reddit_username": "" // reddit user
+    "reddit_username": "", // reddit user
+    "URL_ROOT": "https://root_of_your_site/" // for working outside flask request context
 }
 ```
