@@ -5,8 +5,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
 {% set navigation_bar = [
-  ('/', 'index', 'Index'),
-  ('/subscriptions/new', 'subscriptions_new', 'Get Started')
+  ("index", 'index', 'Index'),
+  ("subscriptions.new", 'subscriptions_new', 'Get Started')
 ] -%}
 
 {% set active_page = active_page|default('index') -%}
@@ -20,7 +20,7 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         {% for href, id, caption in navigation_bar %}
-        <a {% if id == active_page %} class="nav-link active" {% else %} class="nav-link" {% endif %} aria-current="page" href="{{ href|e }}">{{ caption|e }}</a>
+        <a {% if id == active_page %} class="nav-link active" {% else %} class="nav-link" {% endif %} aria-current="page" href="{{ url_for('{}'.format(href)) }}">{{ caption|e }}</a>
         {% endfor %}
       </div>
     </div>
