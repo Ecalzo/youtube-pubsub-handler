@@ -8,4 +8,4 @@ def test_config():
 
 def test_hello(client):
     response = client.get("/")
-    assert response.data == b"Hello, World!"
+    assert b"Connect any YouTube Channel to a subreddit" in response.data

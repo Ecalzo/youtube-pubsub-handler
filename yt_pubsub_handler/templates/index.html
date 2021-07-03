@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% set active_page = "index" %}
+
+{% block header %}
+    {% block title %}Connect any YouTube Channel to a subreddit{% endblock %}
+{% endblock %}
+{% block content %}
+<div class="text-center">
+    <form action="{{ url_for('subscriptions.new') }}">
+        <button class="btn btn-primary btn-lg" type="submit">Get Started</button>
+    </form>
+</div>
+{% endblock %}

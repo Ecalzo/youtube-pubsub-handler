@@ -1,16 +1,20 @@
 {% extends 'base.html' %}
+{% set active_page = "subscriptions_new" %}
 
 {% block header %}
-  <h1>{% block title %}Register your Subreddit{% endblock %}</h1>
+  {% block title %}Register your Subreddit{% endblock %}
 {% endblock %}
 
 {% block content %}
   <form method="post">
-    <label for="username">Channel ID</label>
-    <input name="channel_id" id="channel_id" required>
-    <label for="subreddit">Subreddit</label>
-    <input type="subreddit" name="subreddit" id="subreddit" required>
-    <input type="submit" value="Register">
+    <div class="mb-3">
+      <label for="channel_id" class="form-label">Channel ID</label>
+      <input type="text" name="channel_id" class="form-control" id="channel_id" placeholder="Youtube Channel ID">
+    </div>
+    <div class="mb-3">
+      <label for="channel_id" class="form-label">Subreddit</label>
+      <input type="text" name="subreddit" class="form-control" id="subreddit" placeholder="Subreddit e.g. pics">
+    </div>
+    <button type="submit" class="btn btn-primary" value="Register">Register</button>
   </form>
 {% endblock %}
-

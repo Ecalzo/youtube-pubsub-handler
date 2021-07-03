@@ -1,19 +1,45 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} - Flaskr</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<nav>
-  <h1>YT_mod_bot</h1>
-  <ul>
-      <li><a href="{{ url_for('subscriptions.new') }}">Set up for your Subreddit</a>
-  </ul>
-</nav>
-<section class="content">
-  <header>
-    {% block header %}{% endblock %}
-  </header>
-  {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-  {% endfor %}
-  {% block content %}{% endblock %}
-</section>
+<html lang="en">
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
+{% set navigation_bar = [
+  ('/', 'index', 'Index'),
+  ('/subscriptions/new', 'subscriptions_new', 'Get Started')
+] -%}
+
+{% set active_page = active_page|default('index') -%}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ url_for('subscriptions.new') }}">Youtube + Reddit Setup</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        {% for href, id, caption in navigation_bar %}
+        <a {% if id == active_page %} class="nav-link active" {% else %} class="nav-link" {% endif %} aria-current="page" href="{{ href|e }}">{{ caption|e }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="row">
+    <h1 class="text-center">
+      {% block header %}{% endblock %}
+    </h1>
+    <div class="col-3"></div>
+    <div class="col-6">
+      {% for message in get_flashed_messages() %}
+        <div class="flash alert alert-danger" role="alert">{{ message }}</div>
+      {% endfor %}
+      {% block content %}{% endblock %}
+    </div>
+    <div class="col-3"></div>
+  </div>
+</div>
+</html>
