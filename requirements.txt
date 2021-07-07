@@ -1,3 +1,4 @@
+alembic==1.6.5
 argcomplete==1.12.3
 attrs==20.3.0
 boto3==1.17.84
@@ -8,6 +9,7 @@ chardet==4.0.0
 click==7.1.2
 durationpy==0.5
 Flask==1.1.2
+Flask-Migrate==3.0.1
 flask-ngrok==0.0.25
 Flask-SQLAlchemy==2.5.1
 future==0.18.2
@@ -20,6 +22,7 @@ itsdangerous==1.1.0
 Jinja2==2.11.3
 jmespath==0.10.0
 kappa==0.6.0
+Mako==1.1.4
 MarkupSafe==1.1.1
 mysql-connector-python==8.0.25
 packaging==20.9
@@ -32,10 +35,12 @@ prawcore==2.0.0
 protobuf==3.17.3
 psycopg2-binary==2.8.6
 py==1.10.0
+pycodestyle==2.7.0
 pyparsing==2.4.7
 pytest==6.2.3
 python-dateutil==2.8.1
 python-dotenv==0.16.0
+python-editor==1.0.4
 python-slugify==5.0.2
 pytz==2021.1
 PyYAML==5.4.1
