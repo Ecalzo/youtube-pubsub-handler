@@ -1,7 +1,6 @@
 import os
 
 from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
 from . import models
 
 
@@ -51,4 +50,6 @@ def create_app(test_config=None):
     app.register_blueprint(pubsubhub.bp)
     from . import subscriptions
     app.register_blueprint(subscriptions.bp)
+    from flask_migrate import Migrate
+    migrate = Migrate(app, db)
     return app
