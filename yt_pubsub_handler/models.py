@@ -35,3 +35,11 @@ class Subscription(db.Model):
 
     def __repr__(self):
         return f"Subscription {self.id} {self.channel_id} {self.subreddit}>"
+
+
+class User(db.Model):
+    id = db.Column(db.String(), primary_key=True)
+    email = db.Column(db.String(), unique=True, nullable=False)
+
+    def __repr__(self):
+        return f"User {self.id} {self.email}>"
