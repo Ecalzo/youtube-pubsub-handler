@@ -1,10 +1,31 @@
 import os
 
 from flask import Flask, render_template
+from flask_login import (
+    LoginManager,
+    current_user
+)
+from oauthlib.oauth2 import WebApplicationClient
+
 from . import models
 
+# Configuration
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
+GOOGLE_DISCOVERY_URL = (
+    "https://accounts.google.com/.well-known/openid-configuration"
+)
 
 db = models.db
+login_manager = LoginManager()
+client = WebApplicationClient(GOOGLE_CLIENT_ID)
+
+
+# Flask-Login helper to retrieve a user from our db
+@login_manager.user_loader
+def load_user(user_id):
+    from .user import User
+    return User.get(user_id)
 
 
 def create_app(test_config=None):
@@ -30,7 +51,7 @@ def create_app(test_config=None):
 
     @app.route("/")
     def index():
-        return render_template("index.html")
+        return render_template("index.html", current_user=current_user)
 
 
     @app.route("/renew_leases")
@@ -43,13 +64,22 @@ def create_app(test_config=None):
     db.app = app
     db.init_app(app)
     # sets up flask init-db cmd
+    # create a local sqlite db if in dev mode
     from . import db_utils
+    if os.getenv("FLASK_ENV") == "development":
+        db_utils.init_db()
     db_utils.init_app(app)
 
     from . import pubsubhub
     app.register_blueprint(pubsubhub.bp)
     from . import subscriptions
     app.register_blueprint(subscriptions.bp)
+    from . import auth
+    app.register_blueprint(auth.bp)
     from flask_migrate import Migrate
     migrate = Migrate(app, db)
+
+    # user session management setup
+    login_manager.init_app(app)
+
     return app
