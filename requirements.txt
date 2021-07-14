@@ -4,11 +4,14 @@ attrs==20.3.0
 boto3==1.17.84
 botocore==1.20.84
 certifi==2020.12.5
+cffi==1.14.6
 cfn-flip==1.2.3
 chardet==4.0.0
 click==7.1.2
+cryptography==3.4.7
 durationpy==0.5
 Flask==1.1.2
+Flask-Login==0.5.0
 Flask-Migrate==3.0.1
 flask-ngrok==0.0.25
 Flask-SQLAlchemy==2.5.1
@@ -25,6 +28,7 @@ kappa==0.6.0
 Mako==1.1.4
 MarkupSafe==1.1.1
 mysql-connector-python==8.0.25
+oauthlib==3.1.1
 packaging==20.9
 pep517==0.10.0
 pip-tools==6.1.0
@@ -36,6 +40,8 @@ protobuf==3.17.3
 psycopg2-binary==2.8.6
 py==1.10.0
 pycodestyle==2.7.0
+pycparser==2.20
+pyOpenSSL==20.0.1
 pyparsing==2.4.7
 pytest==6.2.3
 python-dateutil==2.8.1
