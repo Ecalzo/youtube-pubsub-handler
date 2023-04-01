@@ -11,9 +11,13 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY=os.getenv("SECRET_KEY", 'dev'),
-        SQLALCHEMY_DATABASE_URI=os.getenv("DATABASE_URL", "sqlite:///yt_pubsub_handler.db"),
+        SQLALCHEMY_DATABASE_URI=os.getenv(
+            "DATABASE_URL", "sqlite:///yt_pubsub_handler.db"),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        SCHEDULER_API_ENABLED=True
+        SCHEDULER_API_ENABLED=True,
+        SQLALCHEMY_ENGINE_OPTIONS={
+            'connect_args': {'ssl': {'ca': os.getenv("CERT_PATH")}}
+        }
     )
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -32,13 +36,11 @@ def create_app(test_config=None):
     def index():
         return render_template("index.html")
 
-
     @app.route("/renew_leases")
     def renew_lease():
         from . import lease_utils
         lease_utils.renew_leases(app)
         return "lease renew triggered"
-
 
     db.app = app
     db.init_app(app)
