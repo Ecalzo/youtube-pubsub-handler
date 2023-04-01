@@ -14,10 +14,7 @@ def create_app(test_config=None):
         SQLALCHEMY_DATABASE_URI=os.getenv(
             "DATABASE_URL", "sqlite:///yt_pubsub_handler.db"),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        SCHEDULER_API_ENABLED=True,
-        SQLALCHEMY_ENGINE_OPTIONS={
-            'connect_args': {'ssl': {'ca': os.getenv("CERT_PATH")}}
-        }
+        SCHEDULER_API_ENABLED=True
     )
     if test_config is None:
         # load the instance config, if it exists, when not testing
