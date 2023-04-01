@@ -1,28 +1,48 @@
 {
-    "dev": {
-        "app_function": "run.app",
-        "aws_region": "us-east-1",
-        "profile_name": "default",
-        "project_name": "youtube-pubsub-handler",
-        "runtime": "python3.8",
-        "s3_bucket": "zappa-yt-pubsub-handler-dev",
-        "events": [{
-            "function": "run.run_renew_leases",
-            "expression": "rate(1 hour)"
-        }],
-        "remote_env": "s3://zappa-yt-pubsub-handler-dev/env.json"
-    },
-    "production": {
-        "app_function": "run.app",
-        "aws_region": "us-east-1",
-        "profile_name": "default",
-        "project_name": "youtube-pubsub-handler",
-        "runtime": "python3.8",
-        "s3_bucket": "zappa-yt-pubsub-handler-production",
-        "events": [{
-            "function": "run.run_renew_leases",
-            "expression": "rate(1 hour)"
-        }],
-        "remote_env": "s3://zappa-yt-pubsub-handler-production/env.json"
-    }
+  "dev": {
+    "app_function": "run.app",
+    "aws_region": "us-east-1",
+    "profile_name": "default",
+    "project_name": "youtube-pubsub-handler",
+    "runtime": "python3.8",
+    "s3_bucket": "zappa-yt-pubsub-handler-dev",
+    "events": [
+      {
+        "function": "run.run_renew_leases",
+        "expression": "rate(1 hour)"
+      }
+    ],
+    "remote_env": "s3://zappa-yt-pubsub-handler-dev/env.json",
+    "lambda_description": "aws:states:opt-out"
+  },
+  "staging": {
+    "app_function": "run.app",
+    "aws_region": "us-east-1",
+    "profile_name": "default",
+    "project_name": "youtube-pubsub-handler",
+    "runtime": "python3.8",
+    "s3_bucket": "zappa-yt-pubsub-handler-staging",
+    "events": [
+      {
+        "function": "run.run_renew_leases",
+        "expression": "rate(1 hour)"
+      }
+    ],
+    "remote_env": "s3://zappa-yt-pubsub-handler-staging/env.json"
+  },
+  "production": {
+    "app_function": "run.app",
+    "aws_region": "us-east-1",
+    "profile_name": "default",
+    "project_name": "youtube-pubsub-handler",
+    "runtime": "python3.8",
+    "s3_bucket": "zappa-yt-pubsub-handler-production",
+    "events": [
+      {
+        "function": "run.run_renew_leases",
+        "expression": "rate(1 hour)"
+      }
+    ],
+    "remote_env": "s3://zappa-yt-pubsub-handler-production/env.json"
+  }
 }
