@@ -8,11 +8,14 @@ db = models.db
 
 
 def create_app(test_config=None):
+    certs_dir = os.path.abspath(os.path.join(
+        os.path.dirname(__file__), 'certs'))
+    ssl_cert_path = os.path.join(certs_dir, 'ca-certificates.crt')
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY=os.getenv("SECRET_KEY", 'dev'),
         SQLALCHEMY_DATABASE_URI=os.getenv(
-            "DATABASE_URL", "sqlite:///yt_pubsub_handler.db"),
+            "DATABASE_URL", "sqlite:///yt_pubsub_handler.db") + ssl_cert_path,
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         SCHEDULER_API_ENABLED=True
     )
