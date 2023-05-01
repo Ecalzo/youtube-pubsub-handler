@@ -43,6 +43,8 @@
         "expression": "rate(1 hour)"
       }
     ],
-    "remote_env": "s3://zappa-yt-pubsub-handler-production/env.json"
+    "remote_env": "s3://zappa-yt-pubsub-handler-production/env.json",
+    "extra_packages": ["certifi"],
+    "include": ["certs/ca-certificates.crt"]
   }
 }
